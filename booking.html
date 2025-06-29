@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-M8WDWDQK');</script>
+    <!-- End Google Tag Manager -->
+    
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17217446307"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'AW-17217446307');
+    </script>
+    
+    <title>Book Consultation - Reconstructive Diabetic Foot Care</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .booking-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            max-width: 800px;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            min-height: 600px;
+        }
+
+        .booking-info {
+            background: linear-gradient(135deg, #ebb570 0%, #d4a855 100%);
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .booking-info::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="75" cy="75" r="0.5" fill="rgba(255,255,255,0.05)"/><circle cx="50" cy="10" r="0.8" fill="rgba(255,255,255,0.08)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            opacity: 0.3;
+            animation: float 20s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+
+        .booking-info h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .booking-info p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .contact-info {
+            position: relative;
+            z-index: 1;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .contact-item svg {
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .booking-form {
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .form-header h1 {
+            font-family: 'Playfair Display', serif;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 2rem;
+        }
+
+        .form-header p {
+            color: #7f8c8d;
+            font-size: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #2c3e50;
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e8ecef;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #ebb570;
+            box-shadow: 0 0 0 3px rgba(235, 181, 112, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #ebb570 0%, #d4a855 100%);
+            color: white;
+            border: none;
+            padding: 18px 30px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(235, 181, 112, 0.3);
+            margin-top: 10px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(235, 181, 112, 0.4);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .back-link {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .back-link:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .success-message {
+            display: none;
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #c3e6cb;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #ebb570;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .booking-container {
+                grid-template-columns: 1fr;
+                max-width: 500px;
+            }
+            
+            .booking-info {
+                padding: 30px;
+                text-align: center;
+            }
+            
+            .booking-info h2 {
+                font-size: 2rem;
+            }
+            
+            .booking-form {
+                padding: 30px;
+            }
+            
+            .form-header h1 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-M8WDWDQK"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
+    <a href="index.html" class="back-link">← Back to Home</a>
+
+    <div class="booking-container">
+        <div class="booking-info">
+            <h2>Expert Diabetic Foot Care</h2>
+            <p>Schedule your consultation with our specialized team of reconstructive surgeons. We provide comprehensive care for diabetic foot complications with advanced treatment options.</p>
+            
+            <div class="contact-info">
+                <div class="contact-item">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M22 16.92V19.92C22 20.52 21.52 21 20.92 21C9.4 21 0 11.6 0 0.08C0 -0.52 0.48 -1 1.08 -1H4.08C4.68 -1 5.16 -0.52 5.16 0.08C5.16 2.08 5.44 4.08 6 5.92C6.2 6.44 6 7 5.52 7.28L3.92 8.28C5.2 11.04 7.96 13.8 10.72 15.08L11.72 13.48C12 13 12.56 12.8 13.08 13C14.92 13.56 16.92 13.84 18.92 13.84C19.52 13.84 20 14.32 20 14.92V16.92H22Z" fill="white"/>
+                    </svg>
+                    <span>+91 88867 35004</span>
+                </div>
+                
+                <div class="contact-item">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M20 4H4C2.9 4 2 4.9 2 6V18C2 19.1 2.9 20 4 20H20C21.1 20 22 19.1 22 18V6C22 4.9 21.1 4 20 4ZM20 8L12 13L4 8V6L12 11L20 6V8Z" fill="white"/>
+                    </svg>
+                    <span>contact@rdfc.in</span>
+                </div>
+                
+                <div class="contact-item">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="12" cy="12" r="10" stroke="white" stroke-width="2"/>
+                        <path d="M12 6V12L16 14" stroke="white" stroke-width="2"/>
+                    </svg>
+                    <span>Available 24/7</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="booking-form">
+            <div class="form-header">
+                <h1>Book Your Consultation</h1>
+                <p>Fill out the form below and we'll contact you shortly</p>
+            </div>
+
+            <div class="success-message" id="successMessage">
+                <strong>Thank you!</strong> Your consultation request has been submitted successfully. We'll contact you within 24 hours.
+            </div>
+
+            <div class="loading" id="loadingMessage">
+                <div class="spinner"></div>
+                <p>Submitting your request...</p>
+            </div>
+
+            <form id="consultationForm">
+                <div class="form-group">
+                    <label for="fullName">Full Name *</label>
+                    <input type="text" id="fullName" name="fullName" required placeholder="Enter your full name">
+                </div>
+
+                <div class="form-group">
+                    <label for="phoneNumber">Phone Number *</label>
+                    <input type="tel" id="phoneNumber" name="phoneNumber" required placeholder="+91 XXXXX XXXXX">
+                </div>
+
+                <div class="form-group">
+                    <label for="preferredDate">Preferred Date</label>
+                    <input type="date" id="preferredDate" name="preferredDate">
+                </div>
+
+                <div class="form-group">
+                    <label for="helpWith">What do you need help with? *</label>
+                    <select id="helpWith" name="helpWith" required>
+                        <option value="">Select your concern</option>
+                        <option value="diabetic-wound">Diabetic Wound Care</option>
+                        <option value="foot-examination">Foot Examination</option>
+                        <option value="infection-control">Infection Control</option>
+                        <option value="reconstructive-surgery">Reconstructive Surgery</option>
+                        <option value="preventive-care">Preventive Care</option>
+                        <option value="second-opinion">Second Opinion</option>
+                        <option value="emergency-consultation">Emergency Consultation</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="additionalInfo">Additional Information</label>
+                    <textarea id="additionalInfo" name="additionalInfo" placeholder="Please describe your symptoms, medical history, or any specific concerns..."></textarea>
+                </div>
+
+                <button type="submit" class="submit-btn">Submit Consultation Request</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Set minimum date to today
+        document.getElementById('preferredDate').min = new Date().toISOString().split('T')[0];
+
+        // Form submission handler
+        document.getElementById('consultationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get form data
+            const formData = new FormData(this);
+            const data = {};
+            formData.forEach((value, key) => {
+                data[key] = value;
+            });
+            
+            // Show loading
+            document.getElementById('loadingMessage').style.display = 'block';
+            this.style.display = 'none';
+            
+            // GTM tracking for form submission
+            gtag('event', 'form_submit', {
+                'event_category': 'engagement',
+                'event_label': 'consultation_form',
+                'custom_parameters': {
+                    'form_name': 'consultation_booking',
+                    'help_with': data.helpWith,
+                    'user_phone': data.phoneNumber,
+                    'preferred_date': data.preferredDate
+                }
+            });
+            
+            // Google Ads conversion tracking
+            gtag('event', 'conversion', {
+                'send_to': 'AW-17217446307/voZPCKCU8uAaEKPD9ZFA',
+                'value': 1.0,
+                'currency': 'INR',
+                'transaction_id': 'consultation_' + Date.now()
+            });
+            
+            // GTM dataLayer push for detailed tracking
+            window.dataLayer = window.dataLayer || [];
+            window.dataLayer.push({
+                'event': 'consultation_form_submit',
+                'form_data': {
+                    'name': data.fullName,
+                    'phone': data.phoneNumber,
+                    'help_with': data.helpWith,
+                    'preferred_date': data.preferredDate,
+                    'timestamp': new Date().toISOString()
+                }
+            });
+            
+            // Simulate form processing (replace with actual API call)
+            setTimeout(() => {
+                document.getElementById('loadingMessage').style.display = 'none';
+                document.getElementById('successMessage').style.display = 'block';
+                
+                // Redirect to WhatsApp with form data
+                const message = encodeURIComponent(
+                    `Hi! I've submitted a consultation request with the following details:\n\n` +
+                    `Name: ${data.fullName}\n` +
+                    `Phone: ${data.phoneNumber}\n` +
+                    `Preferred Date: ${data.preferredDate || 'Not specified'}\n` +
+                    `Help with: ${data.helpWith}\n` +
+                    `Additional Info: ${data.additionalInfo || 'None'}\n\n` +
+                    `Please confirm my appointment. Thank you!`
+                );
+                
+                // Optional: Auto-redirect to WhatsApp after 3 seconds
+                setTimeout(() => {
+                    window.open(`https://wa.me/918886735004?text=${message}`, '_blank');
+                }, 3000);
+                
+            }, 2000);
+        });
+
+        // Phone number formatting
+        document.getElementById('phoneNumber').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length <= 10) {
+                if (value.length > 5) {
+                    value = value.replace(/(\d{5})(\d{0,5})/, '$1 $2');
+                }
+                e.target.value = value;
+            }
+        });
+
+        // GTM tracking for page view
+        gtag('event', 'page_view', {
+            'page_title': 'Book Consultation',
+            'page_location': window.location.href,
+            'content_group1': 'booking_page'
+        });
+    </script>
+</body>
+</html>
