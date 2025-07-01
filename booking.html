@@ -253,10 +253,21 @@
             display: none;
             background: #d4edda;
             color: #155724;
-            padding: 15px;
+            padding: 20px;
             border-radius: 10px;
             margin-bottom: 20px;
             border: 1px solid #c3e6cb;
+            text-align: center;
+        }
+
+        .success-message h3 {
+            margin-bottom: 10px;
+            color: #155724;
+        }
+
+        .success-message p {
+            margin: 5px 0;
+            font-size: 0.95rem;
         }
 
         .error-message {
@@ -290,6 +301,82 @@
             100% { transform: rotate(360deg); }
         }
 
+        .thank-you-section {
+            display: none;
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .thank-you-section h2 {
+            font-family: 'Playfair Display', serif;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 2.2rem;
+        }
+
+        .thank-you-section .success-icon {
+            width: 80px;
+            height: 80px;
+            background: #28a745;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .thank-you-section .success-icon svg {
+            width: 40px;
+            height: 40px;
+            stroke: white;
+        }
+
+        .contact-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .contact-btn {
+            display: inline-flex;
+            align-items: center;
+            padding: 12px 24px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            gap: 8px;
+        }
+
+        .contact-btn.phone {
+            background: #28a745;
+            color: white;
+        }
+
+        .contact-btn.phone:hover {
+            background: #218838;
+            transform: translateY(-2px);
+        }
+
+        .contact-btn.email {
+            background: #007bff;
+            color: white;
+        }
+
+        .contact-btn.email:hover {
+            background: #0056b3;
+            transform: translateY(-2px);
+        }
+
         @media (max-width: 768px) {
             .booking-container {
                 grid-template-columns: 1fr;
@@ -311,6 +398,17 @@
             
             .form-header h1 {
                 font-size: 1.5rem;
+            }
+
+            .contact-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .contact-btn {
+                width: 100%;
+                max-width: 250px;
+                justify-content: center;
             }
         }
     </style>
@@ -360,11 +458,14 @@
             </div>
 
             <div class="success-message" id="successMessage">
-                <strong>Thank you!</strong> Your consultation request has been submitted successfully. Redirecting...
+                <h3>✅ Thank You for Your Submission!</h3>
+                <p>Your consultation request has been successfully received.</p>
+                <p>We will contact you within 24 hours to confirm your appointment.</p>
+                <p><strong>Reference ID:</strong> <span id="referenceId"></span></p>
             </div>
 
             <div class="error-message" id="errorMessage">
-                <strong>Error!</strong> There was a problem submitting your request. Please try again or call us directly.
+                <strong>Error!</strong> There was a problem submitting your request. Please try again or call us directly at +91 88867 35004.
             </div>
 
             <div class="loading" id="loadingMessage">
@@ -372,8 +473,40 @@
                 <p>Submitting your request...</p>
             </div>
 
-            <!-- METHOD 1: Using mailto (simplest approach) -->
-            <form id="consultationForm" method="post">
+            <div class="thank-you-section" id="thankYouSection">
+                <div class="success-icon">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M20 6L9 17L4 12" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <h2>Thank You!</h2>
+                <p style="font-size: 1.1rem; margin-bottom: 15px; color: #2c3e50;">
+                    Your consultation request has been successfully submitted.
+                </p>
+                <p style="color: #666; margin-bottom: 10px;">
+                    <strong>Reference ID:</strong> <span id="thankYouReferenceId"></span>
+                </p>
+                <p style="color: #666; margin-bottom: 30px;">
+                    Our team will contact you within 24 hours to confirm your appointment and discuss your requirements.
+                </p>
+                
+                <div class="contact-buttons">
+                    <a href="tel:+918886735004" class="contact-btn phone">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M22 16.92V19.92C22 20.52 21.52 21 20.92 21C9.4 21 0 11.6 0 0.08C0 -0.52 0.48 -1 1.08 -1H4.08C4.68 -1 5.16 -0.52 5.16 0.08C5.16 2.08 5.44 4.08 6 5.92C6.2 6.44 6 7 5.52 7.28L3.92 8.28C5.2 11.04 7.96 13.8 10.72 15.08L11.72 13.48C12 13 12.56 12.8 13.08 13C14.92 13.56 16.92 13.84 18.92 13.84C19.52 13.84 20 14.32 20 14.92V16.92H22Z" fill="white"/>
+                        </svg>
+                        Call Now
+                    </a>
+                    <a href="mailto:contact@rdfc.in" class="contact-btn email">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M20 4H4C2.9 4 2 4.9 2 6V18C2 19.1 2.9 20 4 20H20C21.1 20 22 19.1 22 18V6C22 4.9 21.1 4 20 4ZM20 8L12 13L4 8V6L12 11L20 6V8Z" fill="white"/>
+                        </svg>
+                        Email Us
+                    </a>
+                </div>
+            </div>
+
+            <form id="consultationForm" action="https://formspree.io/f/xvgrllag" method="POST">
                 <div class="form-group">
                     <label for="fullName">Full Name *</label>
                     <input type="text" id="fullName" name="fullName" required placeholder="Enter your full name">
@@ -414,6 +547,12 @@
                     <textarea id="additionalInfo" name="additionalInfo" placeholder="Please describe your symptoms, medical history, or any specific concerns..."></textarea>
                 </div>
 
+                <!-- Hidden fields for tracking -->
+                <input type="hidden" name="submissionId" id="submissionId">
+                <input type="hidden" name="submissionTime" id="submissionTime">
+                <input type="hidden" name="pageUrl" id="pageUrl">
+                <input type="hidden" name="userAgent" id="userAgent">
+
                 <button type="submit" class="submit-btn" id="submitBtn">Submit Consultation Request</button>
             </form>
         </div>
@@ -434,58 +573,60 @@
             }
         });
 
+        // Generate unique submission ID
+        function generateSubmissionId() {
+            return 'CONS_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5).toUpperCase();
+        }
+
         // Form submission handler
         document.getElementById('consultationForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
-            // Get form data
-            const formData = new FormData(this);
-            const data = {};
-            formData.forEach((value, key) => {
-                data[key] = value;
-            });
-
-            // Add timestamp and unique ID
-            data.submissionId = 'CONS_' + Date.now();
-            data.submissionTime = new Date().toISOString();
+            // Generate unique IDs and timestamps
+            const submissionId = generateSubmissionId();
+            const submissionTime = new Date().toISOString();
+            
+            // Set hidden fields
+            document.getElementById('submissionId').value = submissionId;
+            document.getElementById('submissionTime').value = submissionTime;
+            document.getElementById('pageUrl').value = window.location.href;
+            document.getElementById('userAgent').value = navigator.userAgent;
             
             // Show loading state
             showLoading();
             
-            // Send analytics tracking
-            sendAnalytics(data);
+            // Create FormData object
+            const formData = new FormData(this);
             
-            // Send email using mailto (opens user's email client)
-            sendMailtoEmail(data);
-            
-            // Store form data for thank you page
-            const consultationData = {
-                submissionId: data.submissionId,
-                fullName: data.fullName,
-                phoneNumber: data.phoneNumber,
-                email: data.email,
-                helpWith: data.helpWith,
-                submissionTime: data.submissionTime
-            };
-            
-            // Store in sessionStorage for thank you page
-            try {
-                sessionStorage.setItem('consultationData', JSON.stringify(consultationData));
-            } catch (error) {
-                console.warn('Could not store in sessionStorage:', error);
-            }
-            
-            // Show success and redirect
-            setTimeout(() => {
-                showSuccess();
-                
-                // Redirect to thank you page after 2 seconds
-                setTimeout(() => {
-                    // Try multiple possible paths for thank you page
-                    const possiblePaths = ['thankyou.html', 'thank-you.html', './thankyou.html', 'pages/thankyou.html'];
-                    window.location.href = possiblePaths[0];
-                }, 2000);
-            }, 1000);
+            // Send to Formspree
+            fetch('https://formspree.io/f/xvgrllag', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'Accept': 'application/json'
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    // Success - send analytics and show thank you
+                    sendAnalytics(formData, submissionId);
+                    showThankYou(submissionId);
+                } else {
+                    // Handle errors
+                    response.json().then(data => {
+                        if (data.errors) {
+                            console.error('Form errors:', data.errors);
+                        }
+                        showError();
+                    }).catch(() => {
+                        showError();
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Submission error:', error);
+                showError();
+            });
         });
 
         function showLoading() {
@@ -493,14 +634,19 @@
             document.getElementById('consultationForm').style.display = 'none';
             document.getElementById('successMessage').style.display = 'none';
             document.getElementById('errorMessage').style.display = 'none';
+            document.getElementById('thankYouSection').style.display = 'none';
             document.getElementById('submitBtn').disabled = true;
         }
 
-        function showSuccess() {
+        function showThankYou(submissionId) {
             document.getElementById('loadingMessage').style.display = 'none';
-            document.getElementById('successMessage').style.display = 'block';
             document.getElementById('consultationForm').style.display = 'none';
+            document.getElementById('successMessage').style.display = 'none';
             document.getElementById('errorMessage').style.display = 'none';
+            document.getElementById('thankYouSection').style.display = 'block';
+            
+            // Set reference IDs
+            document.getElementById('thankYouReferenceId').textContent = submissionId;
         }
 
         function showError() {
@@ -508,56 +654,11 @@
             document.getElementById('errorMessage').style.display = 'block';
             document.getElementById('consultationForm').style.display = 'block';
             document.getElementById('successMessage').style.display = 'none';
+            document.getElementById('thankYouSection').style.display = 'none';
             document.getElementById('submitBtn').disabled = false;
         }
 
-        function sendMailtoEmail(data) {
-            // Create email content
-            const subject = `New Consultation Request - ${data.fullName}`;
-            const body = `
-CONSULTATION REQUEST DETAILS
-============================
-
-Submission ID: ${data.submissionId}
-Date & Time: ${new Date(data.submissionTime).toLocaleString('en-IN', {timeZone: 'Asia/Kolkata'})}
-
-PATIENT INFORMATION:
-- Full Name: ${data.fullName}
-- Phone Number: ${data.phoneNumber}
-- Email: ${data.email || 'Not provided'}
-- Preferred Date: ${data.preferredDate || 'Not specified'}
-
-MEDICAL CONCERN:
-- Help Required: ${data.helpWith}
-- Additional Information: ${data.additionalInfo || 'None provided'}
-
-TECHNICAL INFO:
-- User Agent: ${navigator.userAgent}
-- Page URL: ${window.location.href}
-- Referrer: ${document.referrer || 'Direct visit'}
-
-Please contact the patient as soon as possible.
-            `.trim();
-
-            // Create mailto link
-            const mailtoLink = `mailto:cosmeticdivyam@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-            
-            // Open default email client
-            const emailWindow = window.open(mailtoLink, '_blank');
-            
-            // Fallback: if popup blocked or email client not available
-            if (!emailWindow) {
-                // Create a temporary link and click it
-                const link = document.createElement('a');
-                link.href = mailtoLink;
-                link.style.display = 'none';
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-            }
-        }
-
-        function sendAnalytics(data) {
+        function sendAnalytics(formData, submissionId) {
             try {
                 // Lead conversion tracking
                 if (typeof gtag !== 'undefined') {
@@ -565,7 +666,7 @@ Please contact the patient as soon as possible.
                         'send_to': 'AW-17286200275/7pPkCOrgtOYaENP32bJA',
                         'value': 1.0,
                         'currency': 'INR',
-                        'transaction_id': data.submissionId
+                        'transaction_id': submissionId
                     });
 
                     // Additional conversion tracking
@@ -573,7 +674,7 @@ Please contact the patient as soon as possible.
                         'send_to': 'AW-17217446307/voZPCKCU8uAaEKPD9ZFA',
                         'value': 1.0,
                         'currency': 'INR',
-                        'transaction_id': data.submissionId
+                        'transaction_id': submissionId
                     });
 
                     // Form submission event
@@ -587,7 +688,7 @@ Please contact the patient as soon as possible.
                     gtag('event', 'generate_lead', {
                         'value': 1.0,
                         'currency': 'INR',
-                        'transaction_id': data.submissionId
+                        'transaction_id': submissionId
                     });
                 }
                 
@@ -596,17 +697,17 @@ Please contact the patient as soon as possible.
                 window.dataLayer.push({
                     'event': 'consultation_form_submit',
                     'form_data': {
-                        'submission_id': data.submissionId,
-                        'name': data.fullName,
-                        'phone': data.phoneNumber,
-                        'email': data.email || 'not_provided',
-                        'help_with': data.helpWith,
-                        'preferred_date': data.preferredDate || 'not_specified',
-                        'timestamp': data.submissionTime
+                        'submission_id': submissionId,
+                        'name': formData.get('fullName'),
+                        'phone': formData.get('phoneNumber'),
+                        'email': formData.get('email') || 'not_provided',
+                        'help_with': formData.get('helpWith'),
+                        'preferred_date': formData.get('preferredDate') || 'not_specified',
+                        'timestamp': formData.get('submissionTime')
                     }
                 });
 
-                console.log('Analytics tracking completed');
+                console.log('Analytics tracking completed for:', submissionId);
             } catch (error) {
                 console.warn('Analytics tracking failed:', error);
             }
@@ -625,7 +726,7 @@ Please contact the patient as soon as possible.
             });
         });
 
-        console.log('Simplified form script loaded successfully');
+        console.log('Formspree integration loaded successfully');
     </script>
 </body>
 </html>
