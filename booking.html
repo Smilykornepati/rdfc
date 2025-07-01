@@ -422,9 +422,19 @@
     </div>
 
     <script>
-        // Initialize EmailJS with your public key
-        // Replace 'YOUR_PUBLIC_KEY' with your actual EmailJS public key
-        emailjs.init('YOUR_PUBLIC_KEY');
+        // Configuration flags - set these based on your needs
+        const CONFIG = {
+            emailEnabled: false, // Set to true when you configure EmailJS
+            publicKey: 'YOUR_PUBLIC_KEY', // Replace with actual EmailJS public key
+            serviceId: 'YOUR_SERVICE_ID', // Replace with actual service ID
+            templateId: 'YOUR_TEMPLATE_ID', // Replace with actual template ID
+            redirectDelay: 2000 // Delay before redirect in milliseconds
+        };
+
+        // Initialize EmailJS only if enabled and configured
+        if (CONFIG.emailEnabled && CONFIG.publicKey !== 'YOUR_PUBLIC_KEY') {
+            emailjs.init(CONFIG.publicKey);
+        }
 
         // Set minimum date to today
         document.getElementById('preferredDate').min = new Date().toISOString().split('T')[0];
@@ -461,16 +471,25 @@
             showLoading();
             
             try {
-                // Send analytics tracking first
+                console.log('Processing form submission...', data);
+                
+                // Send analytics tracking
                 await sendAnalytics(data);
+                console.log('Analytics sent successfully');
                 
-                // Send email notification
-                await sendEmailNotification(data);
+                // Send email notification (if enabled)
+                if (CONFIG.emailEnabled) {
+                    await sendEmailNotification(data);
+                    console.log('Email sent successfully');
+                } else {
+                    console.log('Email sending skipped (not configured)');
+                }
                 
-                // Show success message briefly
+                // Show success message
                 showSuccess();
+                console.log('Success message shown');
                 
-                // Store form data in sessionStorage for thank you page
+                // Store form data for thank you page
                 sessionStorage.setItem('consultationData', JSON.stringify({
                     submissionId: data.submissionId,
                     fullName: data.fullName,
@@ -479,19 +498,24 @@
                     helpWith: data.helpWith,
                     submissionTime: data.submissionTime
                 }));
+                console.log('Data stored in sessionStorage');
                 
-                // Redirect to thank you page after 2 seconds
+                // Redirect to thank you page
                 setTimeout(() => {
-                    window.location.href = 'thankyou.html';
-                }, 2000);
+                    console.log('Redirecting to thank you page...');
+                    // Try multiple redirect paths
+                    const thankYouPaths = ['thankyou.html', 'thank-you.html', './thankyou.html'];
+                    window.location.href = thankYouPaths[0]; // Use the first path
+                }, CONFIG.redirectDelay);
                 
             } catch (error) {
-                console.error('Submission error:', error);
+                console.error('Form submission error:', error);
                 showError();
             }
         });
 
         function showLoading() {
+            console.log('Showing loading state');
             document.getElementById('loadingMessage').style.display = 'block';
             document.getElementById('consultationForm').style.display = 'none';
             document.getElementById('successMessage').style.display = 'none';
@@ -500,6 +524,7 @@
         }
 
         function showSuccess() {
+            console.log('Showing success state');
             document.getElementById('loadingMessage').style.display = 'none';
             document.getElementById('successMessage').style.display = 'block';
             document.getElementById('consultationForm').style.display = 'none';
@@ -507,6 +532,7 @@
         }
 
         function showError() {
+            console.log('Showing error state');
             document.getElementById('loadingMessage').style.display = 'none';
             document.getElementById('errorMessage').style.display = 'block';
             document.getElementById('consultationForm').style.display = 'block';
@@ -515,98 +541,90 @@
         }
 
         async function sendAnalytics(data) {
-            // Lead conversion tracking - Main conversion
-            gtag('event', 'conversion', {
-                'send_to': 'AW-17286200275/7pPkCOrgtOYaENP32bJA',
-                'value': 1.0,
-                'currency': 'INR',
-                'transaction_id': data.submissionId
-            });
-
-            // GTM tracking for form submission
-            gtag('event', 'form_submit', {
-                'event_category': 'engagement',
-                'event_label': 'consultation_form',
-                'custom_parameters': {
-                    'form_name': 'consultation_booking',
-                    'help_with': data.helpWith,
-                    'user_phone': data.phoneNumber,
-                    'preferred_date': data.preferredDate,
-                    'submission_id': data.submissionId
-                }
-            });
-            
-            // Google Ads conversion tracking - Additional conversion
-            gtag('event', 'conversion', {
-                'send_to': 'AW-17217446307/voZPCKCU8uAaEKPD9ZFA',
-                'value': 1.0,
-                'currency': 'INR',
-                'transaction_id': data.submissionId
-            });
-
-            // Lead generation event
-            gtag('event', 'generate_lead', {
-                'value': 1.0,
-                'currency': 'INR',
-                'transaction_id': data.submissionId
-            });
-            
-            // GTM dataLayer push for detailed tracking
-            window.dataLayer = window.dataLayer || [];
-            window.dataLayer.push({
-                'event': 'consultation_form_submit',
-                'form_data': {
-                    'submission_id': data.submissionId,
-                    'name': data.fullName,
-                    'phone': data.phoneNumber,
-                    'email': data.email || 'not_provided',
-                    'help_with': data.helpWith,
-                    'preferred_date': data.preferredDate || 'not_specified',
-                    'additional_info': data.additionalInfo ? 'provided' : 'not_provided',
-                    'timestamp': data.submissionTime,
-                    'user_agent': data.userAgent,
-                    'referrer': data.referrer || 'direct'
-                },
-                'user_data': {
-                    'phone_number': data.phoneNumber,
-                    'email_address': data.email || '',
-                    'first_name': data.fullName.split(' ')[0] || '',
-                    'last_name': data.fullName.split(' ').slice(1).join(' ') || ''
-                }
-            });
-
-            // Facebook Pixel tracking (if you have Facebook Pixel)
-            if (typeof fbq !== 'undefined') {
-                fbq('track', 'Lead', {
-                    content_name: 'Consultation Booking',
-                    content_category: 'Healthcare',
-                    value: 1,
-                    currency: 'INR'
-                });
-            }
-
-            // Send to custom analytics endpoint
             try {
-                await fetch('https://your-analytics-endpoint.com/api/track', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        event: 'consultation_form_submit',
-                        data: data,
-                        timestamp: Date.now(),
-                        page_url: window.location.href,
-                        page_title: document.title
-                    })
+                // Lead conversion tracking - Main conversion
+                if (typeof gtag !== 'undefined') {
+                    gtag('event', 'conversion', {
+                        'send_to': 'AW-17286200275/7pPkCOrgtOYaENP32bJA',
+                        'value': 1.0,
+                        'currency': 'INR',
+                        'transaction_id': data.submissionId
+                    });
+
+                    // GTM tracking for form submission
+                    gtag('event', 'form_submit', {
+                        'event_category': 'engagement',
+                        'event_label': 'consultation_form',
+                        'custom_parameters': {
+                            'form_name': 'consultation_booking',
+                            'help_with': data.helpWith,
+                            'user_phone': data.phoneNumber,
+                            'preferred_date': data.preferredDate,
+                            'submission_id': data.submissionId
+                        }
+                    });
+                    
+                    // Google Ads conversion tracking - Additional conversion
+                    gtag('event', 'conversion', {
+                        'send_to': 'AW-17217446307/voZPCKCU8uAaEKPD9ZFA',
+                        'value': 1.0,
+                        'currency': 'INR',
+                        'transaction_id': data.submissionId
+                    });
+
+                    // Lead generation event
+                    gtag('event', 'generate_lead', {
+                        'value': 1.0,
+                        'currency': 'INR',
+                        'transaction_id': data.submissionId
+                    });
+                }
+                
+                // GTM dataLayer push for detailed tracking
+                window.dataLayer = window.dataLayer || [];
+                window.dataLayer.push({
+                    'event': 'consultation_form_submit',
+                    'form_data': {
+                        'submission_id': data.submissionId,
+                        'name': data.fullName,
+                        'phone': data.phoneNumber,
+                        'email': data.email || 'not_provided',
+                        'help_with': data.helpWith,
+                        'preferred_date': data.preferredDate || 'not_specified',
+                        'additional_info': data.additionalInfo ? 'provided' : 'not_provided',
+                        'timestamp': data.submissionTime,
+                        'user_agent': data.userAgent,
+                        'referrer': data.referrer || 'direct'
+                    }
                 });
+
+                // Facebook Pixel tracking (if available)
+                if (typeof fbq !== 'undefined') {
+                    fbq('track', 'Lead', {
+                        content_name: 'Consultation Booking',
+                        content_category: 'Healthcare',
+                        value: 1,
+                        currency: 'INR'
+                    });
+                }
+
+                console.log('Analytics tracking completed');
             } catch (error) {
-                console.warn('Custom analytics tracking failed:', error);
+                console.warn('Analytics tracking failed:', error);
+                // Don't throw error - analytics failure shouldn't stop form submission
             }
         }
 
         async function sendEmailNotification(data) {
-            // Prepare email template parameters
+            // Only attempt if EmailJS is properly configured
+            if (!CONFIG.emailEnabled || 
+                CONFIG.publicKey === 'YOUR_PUBLIC_KEY' || 
+                CONFIG.serviceId === 'YOUR_SERVICE_ID' || 
+                CONFIG.templateId === 'YOUR_TEMPLATE_ID') {
+                console.log('EmailJS not configured, skipping email send');
+                return;
+            }
+
             const templateParams = {
                 to_email: 'cosmeticdivyam@gmail.com',
                 from_name: 'RDFC Consultation Form',
@@ -630,58 +648,48 @@
                 referrer: data.referrer || 'Direct visit'
             };
 
-            // Send email using EmailJS
             try {
                 await emailjs.send(
-                    'YOUR_SERVICE_ID', // Replace with your EmailJS service ID
-                    'YOUR_TEMPLATE_ID', // Replace with your EmailJS template ID
+                    CONFIG.serviceId,
+                    CONFIG.templateId,
                     templateParams
                 );
-                console.log('Email sent successfully');
+                console.log('EmailJS notification sent successfully');
             } catch (error) {
-                console.error('Email sending failed:', error);
+                console.error('EmailJS sending failed:', error);
                 throw error;
-            }
-
-            // Alternative: Send to your backend API
-            try {
-                await fetch('https://your-backend-api.com/api/send-consultation-email', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        to: 'cosmeticdivyam@gmail.com',
-                        subject: `New Consultation Request - ${data.submissionId}`,
-                        template: 'consultation_notification',
-                        data: templateParams
-                    })
-                });
-            } catch (error) {
-                console.warn('Backend email API failed:', error);
             }
         }
 
-        // GTM tracking for page view
-        gtag('event', 'page_view', {
-            'page_title': 'Book Consultation',
-            'page_location': window.location.href,
-            'content_group1': 'booking_page'
+        // Add debugging for redirect
+        window.addEventListener('beforeunload', function() {
+            console.log('Page is about to redirect/unload');
         });
+
+        // GTM tracking for page view
+        if (typeof gtag !== 'undefined') {
+            gtag('event', 'page_view', {
+                'page_title': 'Book Consultation',
+                'page_location': window.location.href,
+                'content_group1': 'booking_page'
+            });
+        }
 
         // Track form field interactions
         const formFields = document.querySelectorAll('input, select, textarea');
         formFields.forEach(field => {
             field.addEventListener('focus', function() {
-                gtag('event', 'form_field_focus', {
-                    'event_category': 'form_interaction',
-                    'event_label': this.name || this.id,
-                    'field_type': this.type || this.tagName.toLowerCase()
-                });
+                if (typeof gtag !== 'undefined') {
+                    gtag('event', 'form_field_focus', {
+                        'event_category': 'form_interaction',
+                        'event_label': this.name || this.id,
+                        'field_type': this.type || this.tagName.toLowerCase()
+                    });
+                }
             });
 
             field.addEventListener('blur', function() {
-                if (this.value) {
+                if (this.value && typeof gtag !== 'undefined') {
                     gtag('event', 'form_field_complete', {
                         'event_category': 'form_interaction',
                         'event_label': this.name || this.id,
@@ -690,6 +698,8 @@
                 }
             });
         });
+
+        console.log('Form script loaded successfully');
     </script>
 </body>
 </html>
