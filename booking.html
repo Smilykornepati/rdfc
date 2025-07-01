@@ -47,9 +47,6 @@
 
   gtag('config', 'AW-17286200275');
 </script>
-
-    <!-- EmailJS SDK -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/emailjs-com/3.2.0/email.min.js"></script>
     
     <title>Book Consultation - Reconstructive Diabetic Foot Care</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -363,7 +360,7 @@
             </div>
 
             <div class="success-message" id="successMessage">
-                <strong>Thank you!</strong> Your consultation request has been submitted successfully. Redirecting to thank you page...
+                <strong>Thank you!</strong> Your consultation request has been submitted successfully. Redirecting...
             </div>
 
             <div class="error-message" id="errorMessage">
@@ -375,7 +372,8 @@
                 <p>Submitting your request...</p>
             </div>
 
-            <form id="consultationForm">
+            <!-- METHOD 1: Using mailto (simplest approach) -->
+            <form id="consultationForm" method="post">
                 <div class="form-group">
                     <label for="fullName">Full Name *</label>
                     <input type="text" id="fullName" name="fullName" required placeholder="Enter your full name">
@@ -422,20 +420,6 @@
     </div>
 
     <script>
-        // Configuration flags - set these based on your needs
-        const CONFIG = {
-            emailEnabled: false, // Set to true when you configure EmailJS
-            publicKey: 'YOUR_PUBLIC_KEY', // Replace with actual EmailJS public key
-            serviceId: 'YOUR_SERVICE_ID', // Replace with actual service ID
-            templateId: 'YOUR_TEMPLATE_ID', // Replace with actual template ID
-            redirectDelay: 2000 // Delay before redirect in milliseconds
-        };
-
-        // Initialize EmailJS only if enabled and configured
-        if (CONFIG.emailEnabled && CONFIG.publicKey !== 'YOUR_PUBLIC_KEY') {
-            emailjs.init(CONFIG.publicKey);
-        }
-
         // Set minimum date to today
         document.getElementById('preferredDate').min = new Date().toISOString().split('T')[0];
 
@@ -451,7 +435,7 @@
         });
 
         // Form submission handler
-        document.getElementById('consultationForm').addEventListener('submit', async function(e) {
+        document.getElementById('consultationForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
             // Get form data
@@ -464,58 +448,47 @@
             // Add timestamp and unique ID
             data.submissionId = 'CONS_' + Date.now();
             data.submissionTime = new Date().toISOString();
-            data.userAgent = navigator.userAgent;
-            data.referrer = document.referrer;
             
             // Show loading state
             showLoading();
             
+            // Send analytics tracking
+            sendAnalytics(data);
+            
+            // Send email using mailto (opens user's email client)
+            sendMailtoEmail(data);
+            
+            // Store form data for thank you page
+            const consultationData = {
+                submissionId: data.submissionId,
+                fullName: data.fullName,
+                phoneNumber: data.phoneNumber,
+                email: data.email,
+                helpWith: data.helpWith,
+                submissionTime: data.submissionTime
+            };
+            
+            // Store in sessionStorage for thank you page
             try {
-                console.log('Processing form submission...', data);
-                
-                // Send analytics tracking
-                await sendAnalytics(data);
-                console.log('Analytics sent successfully');
-                
-                // Send email notification (if enabled)
-                if (CONFIG.emailEnabled) {
-                    await sendEmailNotification(data);
-                    console.log('Email sent successfully');
-                } else {
-                    console.log('Email sending skipped (not configured)');
-                }
-                
-                // Show success message
-                showSuccess();
-                console.log('Success message shown');
-                
-                // Store form data for thank you page
-                sessionStorage.setItem('consultationData', JSON.stringify({
-                    submissionId: data.submissionId,
-                    fullName: data.fullName,
-                    phoneNumber: data.phoneNumber,
-                    email: data.email,
-                    helpWith: data.helpWith,
-                    submissionTime: data.submissionTime
-                }));
-                console.log('Data stored in sessionStorage');
-                
-                // Redirect to thank you page
-                setTimeout(() => {
-                    console.log('Redirecting to thank you page...');
-                    // Try multiple redirect paths
-                    const thankYouPaths = ['thankyou.html', 'thank-you.html', './thankyou.html'];
-                    window.location.href = thankYouPaths[0]; // Use the first path
-                }, CONFIG.redirectDelay);
-                
+                sessionStorage.setItem('consultationData', JSON.stringify(consultationData));
             } catch (error) {
-                console.error('Form submission error:', error);
-                showError();
+                console.warn('Could not store in sessionStorage:', error);
             }
+            
+            // Show success and redirect
+            setTimeout(() => {
+                showSuccess();
+                
+                // Redirect to thank you page after 2 seconds
+                setTimeout(() => {
+                    // Try multiple possible paths for thank you page
+                    const possiblePaths = ['thankyou.html', 'thank-you.html', './thankyou.html', 'pages/thankyou.html'];
+                    window.location.href = possiblePaths[0];
+                }, 2000);
+            }, 1000);
         });
 
         function showLoading() {
-            console.log('Showing loading state');
             document.getElementById('loadingMessage').style.display = 'block';
             document.getElementById('consultationForm').style.display = 'none';
             document.getElementById('successMessage').style.display = 'none';
@@ -524,7 +497,6 @@
         }
 
         function showSuccess() {
-            console.log('Showing success state');
             document.getElementById('loadingMessage').style.display = 'none';
             document.getElementById('successMessage').style.display = 'block';
             document.getElementById('consultationForm').style.display = 'none';
@@ -532,7 +504,6 @@
         }
 
         function showError() {
-            console.log('Showing error state');
             document.getElementById('loadingMessage').style.display = 'none';
             document.getElementById('errorMessage').style.display = 'block';
             document.getElementById('consultationForm').style.display = 'block';
@@ -540,9 +511,55 @@
             document.getElementById('submitBtn').disabled = false;
         }
 
-        async function sendAnalytics(data) {
+        function sendMailtoEmail(data) {
+            // Create email content
+            const subject = `New Consultation Request - ${data.fullName}`;
+            const body = `
+CONSULTATION REQUEST DETAILS
+============================
+
+Submission ID: ${data.submissionId}
+Date & Time: ${new Date(data.submissionTime).toLocaleString('en-IN', {timeZone: 'Asia/Kolkata'})}
+
+PATIENT INFORMATION:
+- Full Name: ${data.fullName}
+- Phone Number: ${data.phoneNumber}
+- Email: ${data.email || 'Not provided'}
+- Preferred Date: ${data.preferredDate || 'Not specified'}
+
+MEDICAL CONCERN:
+- Help Required: ${data.helpWith}
+- Additional Information: ${data.additionalInfo || 'None provided'}
+
+TECHNICAL INFO:
+- User Agent: ${navigator.userAgent}
+- Page URL: ${window.location.href}
+- Referrer: ${document.referrer || 'Direct visit'}
+
+Please contact the patient as soon as possible.
+            `.trim();
+
+            // Create mailto link
+            const mailtoLink = `mailto:cosmeticdivyam@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+            
+            // Open default email client
+            const emailWindow = window.open(mailtoLink, '_blank');
+            
+            // Fallback: if popup blocked or email client not available
+            if (!emailWindow) {
+                // Create a temporary link and click it
+                const link = document.createElement('a');
+                link.href = mailtoLink;
+                link.style.display = 'none';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+        }
+
+        function sendAnalytics(data) {
             try {
-                // Lead conversion tracking - Main conversion
+                // Lead conversion tracking
                 if (typeof gtag !== 'undefined') {
                     gtag('event', 'conversion', {
                         'send_to': 'AW-17286200275/7pPkCOrgtOYaENP32bJA',
@@ -551,25 +568,19 @@
                         'transaction_id': data.submissionId
                     });
 
-                    // GTM tracking for form submission
-                    gtag('event', 'form_submit', {
-                        'event_category': 'engagement',
-                        'event_label': 'consultation_form',
-                        'custom_parameters': {
-                            'form_name': 'consultation_booking',
-                            'help_with': data.helpWith,
-                            'user_phone': data.phoneNumber,
-                            'preferred_date': data.preferredDate,
-                            'submission_id': data.submissionId
-                        }
-                    });
-                    
-                    // Google Ads conversion tracking - Additional conversion
+                    // Additional conversion tracking
                     gtag('event', 'conversion', {
                         'send_to': 'AW-17217446307/voZPCKCU8uAaEKPD9ZFA',
                         'value': 1.0,
                         'currency': 'INR',
                         'transaction_id': data.submissionId
+                    });
+
+                    // Form submission event
+                    gtag('event', 'form_submit', {
+                        'event_category': 'engagement',
+                        'event_label': 'consultation_form',
+                        'value': 1.0
                     });
 
                     // Lead generation event
@@ -580,7 +591,7 @@
                     });
                 }
                 
-                // GTM dataLayer push for detailed tracking
+                // GTM dataLayer push
                 window.dataLayer = window.dataLayer || [];
                 window.dataLayer.push({
                     'event': 'consultation_form_submit',
@@ -591,115 +602,30 @@
                         'email': data.email || 'not_provided',
                         'help_with': data.helpWith,
                         'preferred_date': data.preferredDate || 'not_specified',
-                        'additional_info': data.additionalInfo ? 'provided' : 'not_provided',
-                        'timestamp': data.submissionTime,
-                        'user_agent': data.userAgent,
-                        'referrer': data.referrer || 'direct'
+                        'timestamp': data.submissionTime
                     }
                 });
-
-                // Facebook Pixel tracking (if available)
-                if (typeof fbq !== 'undefined') {
-                    fbq('track', 'Lead', {
-                        content_name: 'Consultation Booking',
-                        content_category: 'Healthcare',
-                        value: 1,
-                        currency: 'INR'
-                    });
-                }
 
                 console.log('Analytics tracking completed');
             } catch (error) {
                 console.warn('Analytics tracking failed:', error);
-                // Don't throw error - analytics failure shouldn't stop form submission
             }
         }
 
-        async function sendEmailNotification(data) {
-            // Only attempt if EmailJS is properly configured
-            if (!CONFIG.emailEnabled || 
-                CONFIG.publicKey === 'YOUR_PUBLIC_KEY' || 
-                CONFIG.serviceId === 'YOUR_SERVICE_ID' || 
-                CONFIG.templateId === 'YOUR_TEMPLATE_ID') {
-                console.log('EmailJS not configured, skipping email send');
-                return;
-            }
-
-            const templateParams = {
-                to_email: 'cosmeticdivyam@gmail.com',
-                from_name: 'RDFC Consultation Form',
-                submission_id: data.submissionId,
-                patient_name: data.fullName,
-                phone_number: data.phoneNumber,
-                email_address: data.email || 'Not provided',
-                preferred_date: data.preferredDate || 'Not specified',
-                help_with: data.helpWith,
-                additional_info: data.additionalInfo || 'None provided',
-                submission_time: new Date(data.submissionTime).toLocaleString('en-IN', {
-                    timeZone: 'Asia/Kolkata',
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    second: '2-digit'
-                }),
-                user_agent: data.userAgent,
-                referrer: data.referrer || 'Direct visit'
-            };
-
-            try {
-                await emailjs.send(
-                    CONFIG.serviceId,
-                    CONFIG.templateId,
-                    templateParams
-                );
-                console.log('EmailJS notification sent successfully');
-            } catch (error) {
-                console.error('EmailJS sending failed:', error);
-                throw error;
-            }
-        }
-
-        // Add debugging for redirect
-        window.addEventListener('beforeunload', function() {
-            console.log('Page is about to redirect/unload');
-        });
-
-        // GTM tracking for page view
-        if (typeof gtag !== 'undefined') {
-            gtag('event', 'page_view', {
-                'page_title': 'Book Consultation',
-                'page_location': window.location.href,
-                'content_group1': 'booking_page'
-            });
-        }
-
-        // Track form field interactions
+        // Track form interactions for analytics
         const formFields = document.querySelectorAll('input, select, textarea');
         formFields.forEach(field => {
             field.addEventListener('focus', function() {
                 if (typeof gtag !== 'undefined') {
                     gtag('event', 'form_field_focus', {
                         'event_category': 'form_interaction',
-                        'event_label': this.name || this.id,
-                        'field_type': this.type || this.tagName.toLowerCase()
-                    });
-                }
-            });
-
-            field.addEventListener('blur', function() {
-                if (this.value && typeof gtag !== 'undefined') {
-                    gtag('event', 'form_field_complete', {
-                        'event_category': 'form_interaction',
-                        'event_label': this.name || this.id,
-                        'field_type': this.type || this.tagName.toLowerCase()
+                        'event_label': this.name || this.id
                     });
                 }
             });
         });
 
-        console.log('Form script loaded successfully');
+        console.log('Simplified form script loaded successfully');
     </script>
 </body>
 </html>
