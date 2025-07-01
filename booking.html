@@ -316,7 +316,7 @@
             </div>
 
             <div class="success-message" id="successMessage">
-                <strong>Thank you!</strong> Your consultation request has been submitted successfully. We'll contact you within 24 hours.
+                <strong>Thank you!</strong> Your consultation request has been submitted successfully. Redirecting...
             </div>
 
             <div class="loading" id="loadingMessage">
@@ -417,26 +417,18 @@
                 }
             });
             
-            // Simulate form processing (replace with actual API call)
+            // Simulate form processing and redirect to thank you page
             setTimeout(() => {
                 document.getElementById('loadingMessage').style.display = 'none';
                 document.getElementById('successMessage').style.display = 'block';
                 
-                // Redirect to WhatsApp with form data
-                const message = encodeURIComponent(
-                    `Hi! I've submitted a consultation request with the following details:\n\n` +
-                    `Name: ${data.fullName}\n` +
-                    `Phone: ${data.phoneNumber}\n` +
-                    `Preferred Date: ${data.preferredDate || 'Not specified'}\n` +
-                    `Help with: ${data.helpWith}\n` +
-                    `Additional Info: ${data.additionalInfo || 'None'}\n\n` +
-                    `Please confirm my appointment. Thank you!`
-                );
+                // Store form data in session storage for thank you page (optional)
+                sessionStorage.setItem('consultationData', JSON.stringify(data));
                 
-                // Optional: Auto-redirect to WhatsApp after 3 seconds
+                // Redirect to thank you page after 2 seconds
                 setTimeout(() => {
-                    window.open(`https://wa.me/918886735004?text=${message}`, '_blank');
-                }, 3000);
+                    window.location.href = 'thankyou.html';
+                }, 2000);
                 
             }, 2000);
         });
