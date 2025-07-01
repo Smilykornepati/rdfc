@@ -363,7 +363,7 @@
             </div>
 
             <div class="success-message" id="successMessage">
-                <strong>Thank you!</strong> Your consultation request has been submitted successfully. We'll contact you soon!
+                <strong>Thank you!</strong> Your consultation request has been submitted successfully. Redirecting to thank you page...
             </div>
 
             <div class="error-message" id="errorMessage">
@@ -467,8 +467,23 @@
                 // Send email notification
                 await sendEmailNotification(data);
                 
-                // Show success message
+                // Show success message briefly
                 showSuccess();
+                
+                // Store form data in sessionStorage for thank you page
+                sessionStorage.setItem('consultationData', JSON.stringify({
+                    submissionId: data.submissionId,
+                    fullName: data.fullName,
+                    phoneNumber: data.phoneNumber,
+                    email: data.email,
+                    helpWith: data.helpWith,
+                    submissionTime: data.submissionTime
+                }));
+                
+                // Redirect to thank you page after 2 seconds
+                setTimeout(() => {
+                    window.location.href = '/thankyou.html';
+                }, 2000);
                 
             } catch (error) {
                 console.error('Submission error:', error);
@@ -500,6 +515,14 @@
         }
 
         async function sendAnalytics(data) {
+            // Lead conversion tracking - Main conversion
+            gtag('event', 'conversion', {
+                'send_to': 'AW-17286200275/7pPkCOrgtOYaENP32bJA',
+                'value': 1.0,
+                'currency': 'INR',
+                'transaction_id': data.submissionId
+            });
+
             // GTM tracking for form submission
             gtag('event', 'form_submit', {
                 'event_category': 'engagement',
@@ -513,7 +536,7 @@
                 }
             });
             
-            // Google Ads conversion tracking
+            // Google Ads conversion tracking - Additional conversion
             gtag('event', 'conversion', {
                 'send_to': 'AW-17217446307/voZPCKCU8uAaEKPD9ZFA',
                 'value': 1.0,
@@ -521,9 +544,8 @@
                 'transaction_id': data.submissionId
             });
 
-            // Additional conversion tracking
-            gtag('event', 'conversion', {
-                'send_to': 'AW-17286200275/conversion_label',
+            // Lead generation event
+            gtag('event', 'generate_lead', {
                 'value': 1.0,
                 'currency': 'INR',
                 'transaction_id': data.submissionId
