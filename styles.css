@@ -616,6 +616,65 @@ html {
     border-bottom: none;
 }
 
+/* Case Gallery Section */
+.case-gallery {
+    padding: 6rem 0;
+    background: #f0f2f5;
+}
+
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 2.5rem;
+}
+
+.gallery-card {
+    background: white;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: none;
+    padding: 0;
+}
+
+.gallery-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+}
+
+.gallery-image {
+    position: relative;
+    height: 250px;
+    overflow: hidden;
+}
+
+.gallery-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.gallery-card:hover .gallery-img {
+    transform: scale(1.05);
+}
+
+.gallery-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: #493d2f;
+    margin: 1.5rem 2rem 1rem 2rem;
+}
+
+.gallery-desc {
+    color: #6c757d;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin: 0 2rem 2rem 2rem;
+}
+
 /* Expert Tips Section */
 .expert-tips {
     padding: 6rem 0;
@@ -640,28 +699,6 @@ html {
 .tip-card:hover {
     transform: translateY(-5px);
     box-shadow: 0 15px 35px rgba(0,0,0,0.1);
-}
-
-.tip-image {
-    margin-bottom: 1.5rem;
-    overflow: hidden;
-    border-radius: 10px;
-    height: 200px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.tip-img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 10px;
-    transition: transform 0.3s ease;
-}
-
-.tip-card:hover .tip-img {
-    transform: scale(1.05);
 }
 
 .tip-title {
@@ -1001,7 +1038,28 @@ html {
     color: #6c757d;
     font-size: 0.95rem;
     line-height: 1.6;
-    margin: 0;
+    margin: 0 0 1rem 0;
+}
+
+.location-call-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: #ebb570;
+    color: white;
+    padding: 0.75rem 1.25rem;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    margin-top: 0.5rem;
+}
+
+.location-call-btn:hover {
+    background-color: #d4a054;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(235, 181, 112, 0.3);
 }
 
 .emergency-info {
